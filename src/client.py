@@ -29,43 +29,41 @@ class PracticeHubClient:
             error_cls, message = self._ERRORS[resp.status_code]
             raise error_cls(message)
         resp.raise_for_status()
+        if resp.status_code == 204 or not resp.content:
+            return None
         return resp.json()
 
     def create_post(self, title, body="", tags=None):
         resp = requests.post(f"{self.base}/api/v1/posts", headers=self.headers,
                              json={"title": title, "body": body, "tags": tags or []})
-        resp.raise_for_status()
-        return resp.json()
+        return self._handle_response(resp)
 
     def list_posts(self, mine=False, tag=None):
         params = {"mine": mine}
         if tag:
             params["tag"] = tag
         resp = requests.get(f"{self.base}/api/v1/posts", headers=self.headers, params=params)
-        resp.raise_for_status()
-        return resp.json()
+        return self._handle_response(resp)
 
     # TODO (Mini Project 1): get_post, update_post, delete_post
     def get_post(self, post_id):
         if not isinstance(post_id, int):
             raise TypeError(f"post_id must be an int, got {type(post_id).__name__}")
         resp = requests.get(f"{self.base}/api/v1/posts/{post_id}", headers = self.headers)
-        resp.raise_for_status()
-        return resp.json()
+        return self._handle_response(resp)
 
     def update_post(self, post_id, **fields):
         if not isinstance(post_id, int):
             raise TypeError(f"post_id must be an int, got {type(post_id).__name__}")
         resp = requests.patch(f"{self.base}/api/v1/posts/{post_id}",
                               json=fields, headers=self.headers)
-        resp.raise_for_status()
-        return resp.json()
+        return self._handle_response(resp)
 
     def delete_post(self, post_id):
         if not isinstance(post_id, int):
             raise TypeError(f"post_id must be an int, got {type(post_id).__name__}")
         resp = requests.delete(f"{self.base}/api/v1/posts/{post_id}", headers=self.headers)
-        resp.raise_for_status()
+        self._handle_response(resp)
         return None
 
 if __name__ == "__main__":

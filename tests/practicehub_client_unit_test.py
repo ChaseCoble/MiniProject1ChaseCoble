@@ -115,3 +115,8 @@ def test_handle_response_422_raises(client, mock_response, sample_post, mocker):
     resp = mock_response(sample_post, status_code=422)
     with pytest.raises(MalformedError):
         client._handle_response(resp)
+
+def test_handle_response_204_returns_none(client, mock_response, mocker):
+    resp = mock_response(None, status_code=204)
+    result = client._handle_response(resp)
+    assert result is None
