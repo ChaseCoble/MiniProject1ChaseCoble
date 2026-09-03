@@ -4,7 +4,7 @@
 import os
 import pytest
 from src.client import PracticeHubClient
-from src.exceptions import NotFoundError, ForbiddenError
+from src.exceptions import NotFoundError, ForbiddenError, BadTokenError, MalformedError
 
 TOKEN = os.environ.get("PRACTICE_API_TOKEN")
 
@@ -33,7 +33,7 @@ def temp_post(live_client):
     except NotFoundError:
         pass
 
-
+#CRUD integration tests, implicitly tests 404 error as well
 def test_create_post(live_client):
     post = live_client.create_post(
         title="Create Test", body="body text", tags=["test"]
@@ -78,3 +78,19 @@ def test_full_crud_cycle(live_client):
     live_client.delete_post(created["id"])
     with pytest.raises(NotFoundError):
         live_client.get_post(created["id"])
+
+#Error Handling Integration tests
+def test_401_raises_bad_token_error():
+    bad_client = PracticeHubClient(base_url="https://practice.fhsucyber.com", token="invalid-token-xyz")
+    with pytest.raises(BadTokenError):
+        bad_client.list_posts()
+
+
+def test_403_raises_forbidden_error(live_client):
+    with pytest.raises(ForbiddenError):
+        live_client.update_post(4, title="Trying to edit someone else's post")
+
+
+def test_422_raises_malformed_error(live_client):
+    with pytest.raises(MalformedError):
+        live_client.create_post(title="", body="", tags="not-a-list")
