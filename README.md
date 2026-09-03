@@ -19,38 +19,53 @@ My specific focus on this project will be learning TDD (Test-Driven Development)
  
 ### Installing
  
-* Download src/client.py
+* Download src
  
 ### Executing program
  
 * API Token must be exported to terminal environment
-* (For Linux) export "PRACTICE_API_TOKEN"=<YOUR API TOKEN>
-* python3 client.py
-```
-code blocks for commands
-```
+* (For Linux) ``` export "PRACTICE_API_TOKEN"=<YOUR API TOKEN> ```
+* ```python3 client.py```
  
 ## Help
- 
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
- 
+
 ## Authors
- 
+Chase Coble 
 
 ## Version History
- 
+* 1.0
+    * Full test suite passed and project completed.
+* 0.11
+    * Integration tests for error handling written by me
+* 0.10
+    * Integration tests for CRUD written by me, passed by claude
+* 0.9
+    * Claude writes to pass error handling unit tests
+* 0.8
+    * Error handling tests written by me
+* 0.7
+    * Delete Unit test written by me, passed by Claude
+* 0.6
+    * Claude wrote update to pass tests
+* 0.5
+    * Wrote the unit tests for update_post
+* 0.4
+    * Refactored unit tests to use pytest.fixture after identifying excessive duplicated code
+* 0.3
+    * Removed accidentally tracked .pyc and pycache files
 * 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
+    * Unit test written and passed for get_post
 * 0.1
     * Initial Release
  
 ## License
  
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
- 
+This project is unlicensed
+
 ## Acknowledgments
- 
+ Full API Reference in the [API Documentation](https://practice.fhsucyber.com/docs)
+
+##AI Usage
+
+All tests are written by me, as well as exceptions.py. Claude modified client.py to pass the tests I wrote, while I also confirmed the test harness manually as well. 
+
