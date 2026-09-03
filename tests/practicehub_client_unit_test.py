@@ -5,6 +5,7 @@
 import os
 import pytest
 from src.client import PracticeHubClient
+from src.exceptions import BadTokenError, ForbiddenError, NotFoundError, MalformedError
 
 @pytest.fixture
 def client():
@@ -88,3 +89,29 @@ def test_delete_post(client, mocker):
         "https://practice.fhsucyber.com/api/v1/posts/42",
         headers=client.headers
     )
+
+#Error-Handling Tests
+def test_handle_response_200_returns_json(client, mock_response, sample_post, mocker):
+    resp = mock_response(sample_post, status_code=200)
+    result = client._handle_response(resp)
+    assert result == sample_post
+
+def test_handle_response_401_raises(client, mock_response, sample_post, mocker):
+    resp = mock_response(sample_post, status_code=401)
+    with pytest.raises(BadTokenError):
+        client._handle_response(resp)
+
+def test_handle_response_403_raises(client, mock_response, sample_post, mocker):
+    resp = mock_response(sample_post, status_code=403)
+    with pytest.raises(ForbiddenError):
+        client._handle_response(resp)
+
+def test_handle_response_404_raises(client, mock_response, sample_post, mocker):
+    resp = mock_response(sample_post, status_code=404)
+    with pytest.raises(NotFoundError):
+        client._handle_response(resp)
+
+def test_handle_response_422_raises(client, mock_response, sample_post, mocker):
+    resp = mock_response(sample_post, status_code=422)
+    with pytest.raises(MalformedError):
+        client._handle_response(resp)

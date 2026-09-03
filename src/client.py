@@ -4,6 +4,7 @@
 
 import os
 import requests
+from src.exceptions import BadTokenError, ForbiddenError, NotFoundError, MalformedError
 
 BASE = "https://practice.fhsucyber.com"
 TOKEN = os.environ.get("PRACTICE_API_TOKEN")
