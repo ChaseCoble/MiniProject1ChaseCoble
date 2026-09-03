@@ -32,7 +32,7 @@ def mock_response(mocker):
         resp.raise_for_status.return_value = None
         return resp
     return _make
-
+#Single Post Get
 def test_return_single_post(client, mock_response, sample_post, mocker):
     resp = mock_response(sample_post)
     mock_get = mocker.patch("requests.get", return_value=resp)
@@ -43,5 +43,40 @@ def test_return_single_post(client, mock_response, sample_post, mocker):
         headers=client.headers
     )
     assert result == sample_post
+#Single Post update
+def test_update_post_single_field(client, mock_response, sample_post, mocker):
+    resp = mock_response(sample_post)
+    mock_patch = mocker.patch("requests.patch", return_value=resp)
 
+    client.update_post(42, title="New title")
+
+    mock_patch.assert_called_once_with(
+        "https://practice.fhsucyber.com/api/v1/posts/42",
+        json={"title": "New title"},
+        headers=client.headers
+    )
+
+def test_update_post_multiple_fields(client, mock_response, sample_post, mocker):
+    resp = mock_response(sample_post)
+    mock_patch = mocker.patch("requests.patch", return_value=resp)
+
+    client.update_post(42, title="New title", tags=["updated"])
+
+    mock_patch.assert_called_once_with(
+        "https://practice.fhsucyber.com/api/v1/posts/42",
+        json={"title": "New title", "tags": ["updated"]},
+        headers=client.headers
+    )
+
+def test_update_post_no_fields_sends_empty_payload(client, mock_response, sample_post, mocker):
+    resp = mock_response(sample_post)
+    mock_patch = mocker.patch("requests.patch", return_value=resp)
+
+    client.update_post(42)
+
+    mock_patch.assert_called_once_with(
+        "https://practice.fhsucyber.com/api/v1/posts/42",
+        json={},
+        headers=client.headers
+    )
 
