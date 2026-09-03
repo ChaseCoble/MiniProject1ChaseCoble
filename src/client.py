@@ -11,9 +11,25 @@ TOKEN = os.environ.get("PRACTICE_API_TOKEN")
 
 
 class PracticeHubClient:
+    # Maps an HTTP status code to a (exception class, generic message) pair.
+    # Messages are deliberately vague so a raw server response never leaks out.
+    _ERRORS = {
+        401: (BadTokenError, "Authentication failed: token missing, expired, or invalid."),
+        403: (ForbiddenError, "Access denied: you do not have permission for this action."),
+        404: (NotFoundError, "Not found: the requested resource does not exist."),
+        422: (MalformedError, "Unprocessable request: the submitted data was invalid."),
+    }
+
     def __init__(self, base_url, token):
         self.base = base_url.rstrip("/")
         self.headers = {"Authorization": f"Bearer {token}"}
+
+    def _handle_response(self, resp):
+        if resp.status_code in self._ERRORS:
+            error_cls, message = self._ERRORS[resp.status_code]
+            raise error_cls(message)
+        resp.raise_for_status()
+        return resp.json()
 
     def create_post(self, title, body="", tags=None):
         resp = requests.post(f"{self.base}/api/v1/posts", headers=self.headers,
