@@ -29,11 +29,17 @@ class PracticeHubClient:
         return resp.json()
 
     # TODO (Mini Project 1): get_post, update_post, delete_post
-
+    def get_post(self, post_id):
+        if not isinstance(post_id, int):
+            raise TypeError(f"post_id must be an int, got {type(post_id).__name__}")
+        resp = requests.get(f"{self.base}/api/v1/posts/{post_id}", headers = self.headers)
+        resp.raise_for_status()
+        return resp.json()
 
 if __name__ == "__main__":
     if not TOKEN:
         raise SystemExit("PRACTICE_API_TOKEN is not set - see 'Set your token' in Week 2.")
+
 
     client = PracticeHubClient(BASE, TOKEN)
 

@@ -3,7 +3,7 @@
 ### Mini Project 1
  
  
-#Practice API Wrapper Class
+# Practice API Wrapper Class
  
 Completion of a wrapper class for use with a given API.
  
