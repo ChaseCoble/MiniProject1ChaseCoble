@@ -79,4 +79,12 @@ def test_update_post_no_fields_sends_empty_payload(client, mock_response, sample
         json={},
         headers=client.headers
     )
-
+#Single Post Delete
+def test_delete_post(client, mocker):
+    mock_delete = mocker.patch("requests.delete")
+    mock_delete.return_value.raise_for_status.return_value = None
+    client.delete_post(42)
+    mock_delete.assert_called_once_with(
+        "https://practice.fhsucyber.com/api/v1/posts/42",
+        headers=client.headers
+    )
